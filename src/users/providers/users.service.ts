@@ -5,20 +5,23 @@ import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { ConfigType } from '@nestjs/config';
+import profileConfig from '../configs/profile.config';
+
 /**
  * Class to connect to Users table and perform business operations
  */
 @Injectable()
 export class UsersService {
   constructor(
-    /**
-     * Injecting usersRepository
-     */
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+
+    @Inject(profileConfig.KEY)
+    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -42,6 +45,9 @@ export class UsersService {
   ) {
     const isAuth = this.authService.isAuth();
     console.log(isAuth);
+
+    console.log(this.profileConfiguration);
+    console.log(this.profileConfiguration.apiKey);
 
     return [
       {
