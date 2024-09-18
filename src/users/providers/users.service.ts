@@ -15,7 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { ConfigType } from '@nestjs/config';
 import profileConfig from '../configs/profile.config';
-import { error } from 'console';
+import { UsersCreateManyProvider } from './users-create-many.provider';
+import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
 
 /**
  * Class to connect to Users table and perform business operations
@@ -31,6 +32,8 @@ export class UsersService {
 
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+
+    private readonly usersCreateManyProvider: UsersCreateManyProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -109,5 +112,9 @@ export class UsersService {
       throw new BadRequestException('The user id does not exist');
     }
     return user;
+  }
+
+  public async createMany(createUsersDto: CreateManyUsersDto) {
+    return await this.usersCreateManyProvider.createMany(createUsersDto);
   }
 }
