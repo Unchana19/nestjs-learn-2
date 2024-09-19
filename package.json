@@ -24,7 +24,7 @@
     "@compodoc/compodoc": "^1.1.23",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
-    "@nestjs/core": "^10.0.0",
+    "@nestjs/core": "^10.4.3",
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.3.0",
