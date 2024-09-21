@@ -15,6 +15,9 @@ import { PatchPostDto } from '../dtos/patch-post.dto';
 import { GetPostsDto } from '../dtos/get-posts.dto';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
+import { CreatePostProvier } from './create-post.provier';
+import { ActiveUser } from 'src/auth/decorators/active-user.decorator';
+import { ActiveUserData } from 'src/auth/interfaces/active.user-data.interface';
 
 @Injectable()
 export class PostsService {
@@ -22,6 +25,7 @@ export class PostsService {
     private readonly usersService: UsersService,
     private readonly tagsService: TagsService,
     private readonly paginationProvider: PaginationProvider,
+    private readonly createPostProivder: CreatePostProvier,
 
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
@@ -33,23 +37,16 @@ export class PostsService {
   /**
    * Creating new post
    */
-  public async create(@Body() createPostDto: CreatePostDto) {
-    const author = await this.usersService.findOneById(createPostDto.authorId);
-
-    const tags = await this.tagsService.findMultipleTags(createPostDto.tags);
-
-    const post = this.postsRepository.create({
-      ...createPostDto,
-      author: author,
-      tags: tags,
-    });
-
-    return await this.postsRepository.save(post);
+  public async create(
+    @Body() createPostDto: CreatePostDto,
+    @ActiveUser() user: ActiveUserData,
+  ) {
+    return await this.createPostProivder.create(createPostDto, user);
   }
 
   public async findAll(
     postQuery: GetPostsDto,
-    userId: number,
+    _userId: number,
   ): Promise<Paginated<Post>> {
     const posts = await this.paginationProvider.paginateQuery(
       {
@@ -72,7 +69,7 @@ export class PostsService {
 
     try {
       tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
-    } catch (error) {
+    } catch {
       throw new RequestTimeoutException(
         'Unable to process your request at the moment please try later',
       );
@@ -86,7 +83,7 @@ export class PostsService {
 
     try {
       post = await this.postsRepository.findOneBy({ id: patchPostDto.id });
-    } catch (error) {
+    } catch {
       throw new RequestTimeoutException(
         'Unable to process your request at the moment please try later',
       );
@@ -109,7 +106,7 @@ export class PostsService {
 
     try {
       await this.postsRepository.save(post);
-    } catch (error) {
+    } catch {
       throw new RequestTimeoutException(
         'Unable to process your request at the moment please try later',
       );

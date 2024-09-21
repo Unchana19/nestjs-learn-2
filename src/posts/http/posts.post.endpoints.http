@@ -1,18 +1,22 @@
+{{
+  exports.publishOn = new Date().toString()
+}}
+
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImVtYWlsIjoibWFya0Bkb2UuY29tIiwiaWF0IjoxNzI2OTQwODg1LCJleHAiOjE3MjY5NDQ0ODUsImF1ZCI6ImxvY2FsaG9zdDozMDAwIiwiaXNzIjoibG9jYWxob3N0OjMwMDAifQ.q66UE5NTTDIxenn3omeMomQGjDN3Uo2khaQ2WpRtsbQ
 
 {
   "title": "What's new with NestJS",
   "postType": "post",
-  "slug": "new-with-nestjs-10",
+  "slug": "new-with-nestjs-11",
   "status": "draft",
   "content": "test content",
   "schema": "{\r\n \"@context\": \"https:\/\/schema.org\",\r\n \"@type\": \"Person\"\r\n }",
   "featuredImageUrl": "http://localhost.com/images/image1.jpg",
-  "publishOn": "2024-09-19T07:21:30.336Z",
-  "tags": [1, 2],
+  "publishOn": "{{publishOn}}",
+  "tags": [1],
   "metaOptions": {
     "metaValue" : "{\"sidebarEnabled\": true, \"footerActive\": true}"
-  },
-  "authorId": 1
+  }
 }
